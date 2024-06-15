@@ -56,6 +56,12 @@ namespace ProyectoHorarios.Services
             var filter = Builders<Horario>.Filter.Eq(h => h.Id, horario.Id);
             await _horario.DeleteOneAsync(filter);
         }
+
+        public async Task<List<Horario>> GetHorariosByMedicoAsync(string idMedico)
+        {
+            var horarios = await _horario.Find(h => h.IdMedico == idMedico).ToListAsync();
+            return horarios;
+        }
     }
 
     namespace ProyectoHorario.Services

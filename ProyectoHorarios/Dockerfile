@@ -1,17 +1,17 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+ENV ASPNETCORE_ENVIRONMENT=Development
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ProyectoHorarios/ProyectoHorarios.csproj", "ProyectoHorarios/"]
-RUN dotnet restore "./ProyectoHorarios/ProyectoHorarios.csproj"
+COPY ["ProyectoHorarios.csproj", "."]
+RUN dotnet restore "./ProyectoHorarios.csproj"
 COPY . .
-WORKDIR "/src/ProyectoHorarios"
+WORKDIR "/src/."
 RUN dotnet build "./ProyectoHorarios.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -21,4 +21,4 @@ RUN dotnet publish "./ProyectoHorarios.csproj" -c $BUILD_CONFIGURATION -o /app/p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ProyectoHorarios.dll"]
+ENTRYPOINT ["dotnet", "ProyectoHorarios.dll","environment=Development"]

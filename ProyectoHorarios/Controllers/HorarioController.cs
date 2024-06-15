@@ -109,5 +109,17 @@ namespace ProyectoHorarios.Controllers
             return Ok(horarios);
         }
 
+        [HttpGet("medico/{idMedico}")]
+        public async Task<IActionResult> GetHorariosByMedico(string idMedico)
+        {
+            var horarios = await _horarioService.GetHorariosByMedicoAsync(idMedico);
+            if (horarios == null || !horarios.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(horarios);
+        }
+
     }
 }
